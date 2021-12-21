@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Http;
-using System.Web.Mvc;
 using MySql.Data.MySqlClient;
-using MySqlX.XDevAPI;
 using WebApplication1.Models;
+using System.Collections.Generic;
 
 namespace WebApplication1.Controllers
 {
-    public class UsersController : Controller
+    public class UsersController : ApiController
     {
         public IEnumerable<Users> GetUsersAll()
         {
@@ -21,9 +15,9 @@ namespace WebApplication1.Controllers
             MySqlConnection mySql = GetMySqlConnection();
             MySqlCommand mySqlCommand = GetSqlCommand("select * from student", mySql);
             mySql.Open();
-            MySqlDataReader reader = mySqlCommand.ExecuteReader();
             try
             {
+                MySqlDataReader reader = mySqlCommand.ExecuteReader();
                 while (reader.Read())
                 {
                     if (reader.HasRows)
@@ -38,7 +32,70 @@ namespace WebApplication1.Controllers
             }
             catch
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                Console.WriteLine(HttpStatusCode.NotFound);
+            }
+            finally
+            {
+                mySql.Close();
+            }
+            return listUser;
+        }
+        //http://localhost:44349/api/Users/1
+        public IEnumerable<Users> GetUsersByID(string id)
+        {
+            List<Users> listUser = new List<Users>();
+            MySqlConnection mySql = GetMySqlConnection();
+            MySqlCommand mySqlCommand = GetSqlCommand("select * from student where id = " + id, mySql);
+            mySql.Open();
+            try
+            {
+                MySqlDataReader reader = mySqlCommand.ExecuteReader();
+                while (reader.Read())
+                {
+                    if (reader.HasRows)
+                    {
+                        Users user = new Users();
+                        user.ID = reader.GetInt32("id");
+                        user.Name = reader.GetString("name");
+                        user.Age = reader.GetString("age");
+                        listUser.Add(user);
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine(HttpStatusCode.NotFound);
+            }
+            finally
+            {
+                mySql.Close();
+            }
+            return listUser;
+        }
+        public IEnumerable<Users> GetUsersByAge(string age)
+        {
+            List<Users> listUser = new List<Users>();
+            MySqlConnection mySql = GetMySqlConnection();
+            MySqlCommand mySqlCommand = GetSqlCommand("select * from student where age = " + age, mySql);
+            mySql.Open();
+            try
+            {
+                MySqlDataReader reader = mySqlCommand.ExecuteReader();
+                while (reader.Read())
+                {
+                    if (reader.HasRows)
+                    {
+                        Users user = new Users();
+                        user.ID = reader.GetInt32("id");
+                        user.Name = reader.GetString("name");
+                        user.Age = reader.GetString("age");
+                        listUser.Add(user);
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine(HttpStatusCode.NotFound);
             }
             finally
             {
@@ -50,7 +107,7 @@ namespace WebApplication1.Controllers
         {
             string host = "localhost";
             string port = "3306";
-            string database = "mysql";
+            string database = "gg";
             string id = "root";
             string pwd = "root";
             string connectionString = string.Format("Server = {0};port={1};Database = {2}; User ID = {3}; Password = {4};", host, port, database, id, pwd);
