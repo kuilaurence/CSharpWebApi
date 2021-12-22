@@ -9,6 +9,7 @@ namespace WebApplication1.Controllers
 {
     public class UsersController : ApiController
     {
+        //http://localhost:49593/api/Users
         public IEnumerable<Users> GetUsersAll()
         {
             List<Users> listUser = new List<Users>();
@@ -72,11 +73,12 @@ namespace WebApplication1.Controllers
             }
             return listUser;
         }
-        public IEnumerable<Users> GetUsersByAge(string age)
+        //http://localhost:49593/api/Users?age=21&limit=2&offset=1
+        public IEnumerable<Users> GetUsersByAge(string age, string limit, string offset)
         {
             List<Users> listUser = new List<Users>();
             MySqlConnection mySql = GetMySqlConnection();
-            MySqlCommand mySqlCommand = GetSqlCommand("select * from student where age = " + age, mySql);
+            MySqlCommand mySqlCommand = GetSqlCommand("select * from student where age = " + age + " limit " + limit + " offset " + offset, mySql);
             mySql.Open();
             try
             {
