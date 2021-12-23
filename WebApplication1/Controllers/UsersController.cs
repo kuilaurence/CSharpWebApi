@@ -46,7 +46,7 @@ namespace WebApplication1.Controllers
         {
             List<Users> listUser = new List<Users>();
             MySqlConnection mySql = GetMySqlConnection();
-            MySqlCommand mySqlCommand = GetSqlCommand("select * from student where id = " + id, mySql);
+            MySqlCommand mySqlCommand = GetSqlCommand($"select * from student where id = {id}", mySql);
             mySql.Open();
             try
             {
@@ -78,7 +78,7 @@ namespace WebApplication1.Controllers
         {
             List<Users> listUser = new List<Users>();
             MySqlConnection mySql = GetMySqlConnection();
-            MySqlCommand mySqlCommand = GetSqlCommand("select * from student where age = " + age + " limit " + limit + " offset " + offset, mySql);
+            MySqlCommand mySqlCommand = GetSqlCommand($"select * from student where age = {age}  limit {limit} offset {offset}", mySql);
             mySql.Open();
             try
             {
@@ -107,12 +107,12 @@ namespace WebApplication1.Controllers
         }
         private static MySqlConnection GetMySqlConnection()
         {
-            string host = "localhost";
+            string host = "192.168.3.216";
             string port = "3306";
             string database = "gg";
             string id = "root";
             string pwd = "root";
-            string connectionString = string.Format("Server = {0};port={1};Database = {2}; User ID = {3}; Password = {4};", host, port, database, id, pwd);
+            string connectionString = $"Server = {host};port = {port};Database = {database}; User ID = {id}; Password = {pwd};";
             MySqlConnection mysql = new MySqlConnection(connectionString);
             return mysql;
         }
